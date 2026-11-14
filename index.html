@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ExpenseX – Take Control of Your Money</title>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="icon" href="./assets/icon.svg">
+</head>
+<body>
+<aside id="side">
+  <div class="logo"><img src="assets/icons/icon.svg" alt="" width="30" height="30">ExpenseX</div>
+  <nav>
+    <a href="#dashboard">▦ Dashboard</a>
+    <a href="#transactions">⇄ Transactions</a>
+    <a href="#analytics">◔ Analytics</a>
+    <a href="#budget">◎ Budget</a>
+    <a href="#settings">⚙ Settings</a>
+  </nav>
+  <p class="tag">Take Control of Your Money.</p>
+</aside>
+<div id="scrim"></div>
+<div id="main">
+<header class="top">
+  <button id="menu" class="ic" aria-label="Open menu">☰</button>
+  <div><h1>Welcome back</h1><small id="today"></small></div>
+  <div class="sp"></div>
+  <button id="bell" class="ic" aria-label="Budget alerts">🔔<b id="dot" hidden></b></button>
+  <button class="btn" data-a="add">+ Add transaction</button>
+</header>
+<main>
+
+<section class="page" id="dashboard">
+  <div class="cards">
+    <div class="card stat"><span class="ico">💰</span><small>Total Balance</small><strong id="sBal"></strong><em>Income minus expenses, all time</em></div>
+    <div class="card stat"><span class="ico g">↗</span><small>Total Income</small><strong class="g" id="sInc"></strong><em>Everything you have earned</em></div>
+    <div class="card stat"><span class="ico r">↘</span><small>Total Expenses</small><strong class="r" id="sExp"></strong><em>Everything you have spent</em></div>
+    <div class="card stat"><span class="ico">🏦</span><small>Monthly Savings</small><strong id="sSav"></strong><em>Income minus expenses this month</em></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Income vs Expenses</h2><div class="cw"><canvas id="cBar"></canvas></div></div>
+    <div class="card"><h2>Spending by category (this month)</h2><div class="cw"><canvas id="cDon"></canvas></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="hd"><h2>Recent transactions</h2><a href="#transactions">View all</a></div><div id="recent"></div></div>
+    <div class="card"><h2>Monthly spending summary</h2><div id="msum"></div></div>
+  </div>
+</section>
+
+<section class="page" id="transactions" hidden>
+  <div class="card">
+    <div class="filters">
+      <input id="q" type="search" placeholder="Search by title or note">
+      <select id="fc"></select>
+      <select id="ft"><option value="">All types</option><option value="income">Income</option><option value="expense">Expense</option></select>
+      <input id="fd" type="month" title="Filter by month">
+      <select id="fs"><option value="new">Newest first</option><option value="old">Oldest first</option></select>
+      <button class="btn ghost" id="clr">Clear filters</button>
+    </div>
+    <table>
+      <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Payment</th><th class="n">Amount</th><th></th></tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+    <div id="empty" class="empty" hidden></div>
+  </div>
+</section>
+
+<section class="page" id="analytics" hidden>
+  <div class="cards" id="astats"></div>
+  <div class="grid2">
+    <div class="card"><h2>Expense distribution</h2><div class="cw"><canvas id="aDon"></canvas></div></div>
+    <div class="card"><h2>Monthly income vs expenses</h2><div class="cw"><canvas id="aBar"></canvas></div></div>
+  </div>
+  <div class="card"><h2>Daily spending, last 30 days</h2><div class="cw"><canvas id="aLine"></canvas></div></div>
+</section>
+
+<section class="page" id="budget" hidden>
+  <div class="grid2">
+    <div class="card"><h2>Set budgets</h2>
+      <form id="bf"><label>Monthly budget<input id="bMonthly" type="number" min="0" step="1" placeholder="0 = no limit"></label><div id="bInputs"></div><button class="btn">Save budgets</button></form>
+    </div>
+    <div class="card"><h2>Budget usage this month</h2><div id="bUse"></div></div>
+  </div>
+</section>
+
+<section class="page" id="settings" hidden>
+  <div class="card set">
+    <h2>About ExpenseX</h2>
+    <p class="mu">ExpenseX v1.0 – a personal expense tracker built with HTML, CSS and JavaScript. Your data is saved in this browser's LocalStorage on this device only.</p>
+    <label>Currency<select id="sCur"><option value="INR">Indian Rupee (₹)</option><option value="USD">US Dollar ($)</option><option value="EUR">Euro (€)</option><option value="GBP">British Pound (£)</option></select></label>
+    <label>Theme<select id="sTheme"><option value="dark">Dark</option><option value="light">Light</option></select></label>
+    <div class="acts left">
+      <button class="btn ghost" id="bCsv">Export CSV</button>
+      <button class="btn ghost" id="bRep">Download monthly report</button>
+      <button class="btn ghost" id="bSample">Clear sample data</button>
+      <button class="btn ghost" id="bReset">Reset settings</button>
+      <button class="btn danger" id="bClear">Clear all data</button>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<dialog id="dlg">
+<form id="f" novalidate>
+  <h2 id="dt">Add transaction</h2>
+  <label>Title<input id="fTitle" maxlength="60" placeholder="e.g. Grocery shopping"></label>
+  <div class="row"><label>Amount<input id="fAmt" type="number" step="0.01" min="0" inputmode="decimal"></label>
+  <label>Type<select id="fType"><option value="expense">Expense</option><option value="income">Income</option></select></label></div>
+  <div class="row"><label>Category<select id="fCat"></select></label><label>Date<input id="fDate" type="date"></label></div>
+  <label>Payment method<select id="fPay"></select></label>
+  <label>Description (optional)<textarea id="fDesc" rows="2" maxlength="200"></textarea></label>
+  <p id="ferr" class="err"></p>
+  <div class="acts"><button type="button" class="btn ghost" id="fCancel">Cancel</button><button class="btn">Save transaction</button></div>
+</form>
+</dialog>
+<dialog id="cf"><form method="dialog"><h2>Are you sure?</h2><p id="cfMsg" class="mu"></p>
+  <div class="acts"><button value="no" class="btn ghost">Cancel</button><button value="yes" class="btn danger">Confirm</button></div></form></dialog>
+<div id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="./js/script.js"></script>
+</body>
+</html>
